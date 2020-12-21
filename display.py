@@ -102,8 +102,13 @@ class window:
         self.window.fill(const.WHITE)
 
         #Draw each node object in the grid
-        for row in grid:
+        for row in grid: 
             for n in grid:
                 n.draw(self.window)
+
+        self.draw_grid(rows, self._width)
+        pygame.display.update()
+
+
 
 

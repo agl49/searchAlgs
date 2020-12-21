@@ -1,5 +1,7 @@
 # These are just constants that will
 # use in a bunch of files
+from enum import Enum
+
 
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
@@ -12,4 +14,6 @@ ORANGE = (255, 165, 0)
 GREY = (128, 128, 128)
 TURQUOISE = (64, 224, 208)
 
-
+class buttonMode(Enum):
+     BOOL = 1
+     CALLBACK = 2
