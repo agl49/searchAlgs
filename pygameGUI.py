@@ -7,9 +7,137 @@ import pygame
 import const
 
 
+class simpleTextInput:
+    # constants
+    NUMBERS = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, 
+               pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9,
+               pygame.K_KP0, pygame.K_KP1, pygame.K_KP2, pygame.K_KP3, 
+               pygame.K_KP4, pygame.K_KP5, pygame.K_KP6, pygame.K_KP7, 
+               pygame.K_KP8, pygame.K_KP9]
+
+
+    # Dictionary inputs
+    # "x" = int pixel position on screen
+    # "y" = int pixel position on screen
+    # "width" = int pixel width
+    # "height" = int pixel width
+    # "pos" = pygame.math.Vector2(x,y) 
+    # "size" = pygame.math.Vector2(width, hight)
+    # "bg_color" = (#, #, #) of a color code
+    # "active_color" = (#, #, #) of a color code
+    # "text_size" = int 
+    # "text_color" = (#, #, #) of a color code
+    # "boarder_color" = (#, #, #) of a color code
+    # "boarder" = int thickness of boarder 
+    def __init__(self, **kwargs):
+        self._x = kwargs["x"]
+        self._y = kwargs["y"]
+        self._width = kwargs["width"]
+        self._height = kwargs["height"]
+        self._pos = kwargs["pos"]
+        self._size = kwargs["size"]  # TODO problems with surface location  
+        self._image = pygame.Surface((self._width, self._height))
+        self._rect =  pygame.Rect(self._x, self._y, self._width, self._height)
+        self._bg_color = kwargs["bg_Color"]
+        self._active_color = kwargs["active_color"]
+        self.active = False
+        self.text = ""
+        self.text_size = 24 or kwargs["text_size"]
+        self._font = pygame.font.SysFont("Constantia", self.text_size)
+        self._text_color = kwargs["text_color"]
+        self._boarder_color = kwargs["boarder_color"]
+        self._boarder = kwargs["boarder"]
+    
+    def update(self, surface):
+        # I think just having this contain all internal check function
+        # would be good
+        pass
+
+    def _check_click(self):
+        if self._rect.collidepoint(pygame.mouse.get_pos):
+            self._active = True
+        else: 
+            self._active = False
+
+    def draw(self, surface):
+        # check time 39:47
+        if (self._boarder == 0) and not self.active:
+            self._image.fill(self._bg_color)
+
+        elif (self._boarder == 0) and self.active:
+            self._image.fill(self._active_color)
+
+        else:
+            if self.active:
+                self._image.fill(self._active_color)
+            else:
+                self._image.fill(self._bg_color)
+
+            pygame.draw.rect(self._image, self._boarder_color, self._rect, 
+                             self._boarder)
+        
+        text = self._font.render(self.text, False, self._text_color)
+        text_height = text.get_hight()
+        text_width = text.get_width()
+        # For allowing texts strings longer than the box
+        if text_width < (self._width - self._boarder * 2):
+            self._image.blit(text, (self._boarder * 2, 
+                                   (self._height - text_height)//2))
+        else: 
+            self._image.blit(text, 
+                            ((self._boarder * 2) + 
+                             (self._width - text_width - self._boarder * 3), 
+                            (self._height - text_height)//2))
+
+        
+        surface.blit(self._image, self._pos)
+
+    def add_text(self, key):
+        pass
+
 class simpleTextLable:
     def __init__(self, text):
         self._text = text
+
+    def set_font(self, font, font_size, color, selected_color, 
+                 antialias = True):
+        self._font = font
+        self._font_size = font_size
+        self._color = color
+        self._selected_color = selected_color
+        self._antialias = antialias
+        # self._rect = pygame.Rect(0, 0, 0, 0)
+
+    # This is mainly to make give flexibility to text instantiation
+    def _render_font(self, text, color = (0, 0, 0)):
+        assert isinstance(color, tuple), "Color is not tuple"
+
+        return self._font.render(text, self._antialias, color)
+
+    def _render_string(self):
+        text = self._render_font(self._text, self._color)
+        # not sure about this, we are creating a new surface for the
+        # text then adding that surface to the window instead of adding
+        # that surface to the og window. Not sure if we shoudl do it 
+        # this way
+        text_surface = pygame.Surface((int(text.get_width()), int(text.get_hight())), pygame.SRCALPHA, 32)
+        # Making surface optimized for alpha based transparency 
+        text_surface = pygame.Surface.convert_alpha(text_surface)
+
+        # Still not sure about this...
+        text_surface.blit(text, (0,0))
+        # new_width = text_surface.get_size()[0]
+        new_hight = text_surface.get_size()[1]
+
+        text_surface = pygame.transform.smoothscale(text_surface, (text.get_width(), new_hight))
+
+        return text_surface
+
+    def draw(self, surface, pos):
+        self._surface = self._render_string()
+        # self._rect.width, self._rect.height = self._surface.get_size()
+
+        surface.blit(self._surface, pos) 
 
 #bool based button class
 class Button:
