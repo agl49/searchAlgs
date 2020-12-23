@@ -9,11 +9,23 @@ import const
 
 class simpleTextInput:
     # constants
-    NUMBERS = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, 
-               pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9,
-               pygame.K_KP0, pygame.K_KP1, pygame.K_KP2, pygame.K_KP3, 
-               pygame.K_KP4, pygame.K_KP5, pygame.K_KP6, pygame.K_KP7, 
-               pygame.K_KP8, pygame.K_KP9]
+    # NUMBERS = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, 
+    #            pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9,
+    #            pygame.K_KP0, pygame.K_KP1, pygame.K_KP2, pygame.K_KP3, 
+    #            pygame.K_KP4, pygame.K_KP5, pygame.K_KP6, pygame.K_KP7, 
+    #            pygame.K_KP8, pygame.K_KP9]
+
+    SPECIAL = [pygame.K_EXCLAIM, pygame.K_QUOTEDBL, pygame.K_HASH, 
+               pygame.K_DOLLAR, pygame.K_AMPERSAND, pygame.K_QUOTE, 
+               pygame.K_LEFTPAREN, pygame.K_RIGHTPAREN, pygame.K_ASTERISK,
+               pygame.K_PLUS, pygame.K_COMMA, pygame.K_MINUS, pygame.K_PERIOD,
+               pygame.K_SLASH, pygame.K_COLON, pygame.K_SEMICOLON, 
+               pygame.K_LESS, pygame.K_GREATER, pygame.K_GREATER, pygame.K_AT,
+               pygame.K_LEFTBRACKET, pygame.KSCAN_BACKSLASH,
+               pygame.K_RIGHTBRACKET, pygame.K_CARET, pygame.K_UNDERSCORE, 
+               pygame.K_BACKQUOTE, pygame.K_KP_PERIOD, pygame.K_KP_DIVIDE, 
+               pygame.K_KP_MULTIPLY, pygame.K_KP_MINUS, pygame.K_KP_PLUS,
+               pygame.K_KP_ENTER, pygame.K_KP_EQUALS]
 
 
     # Dictionary inputs
@@ -93,7 +105,49 @@ class simpleTextInput:
         surface.blit(self._image, self._pos)
 
     def add_text(self, key):
-        pass
+        try:
+            
+            # Backspace
+            if key == pygame.K_BACKSPACE or key == pygame.K_DELETE:
+                text = list(self.text)
+                text.pop()
+                self.text = "".join(text)
+
+            # Space Bar
+            elif key == pygame.K_SPACE:
+                text = list(self.text)
+                text.append(" ")
+                self.text = "".join(text)
+
+            # tab
+            elif key == pygame.K_TAB:
+                text = list(self.text)
+                text.append("   ")
+                self.text = "".join(text)
+
+            # Special char
+            elif key in simpleTextInput.SPECIAL:
+                text = list(self.text)
+                text.append(chr(key))
+                self.text = "".join(text)
+
+            # add numbers and letters
+            elif chr(key).isalnum():
+                text = list(self.text)
+                text.append(chr(key))
+                self.text = "".join(text)
+
+            else:
+                # Key not accepted
+                print(f"Key not accepted: {key}")
+
+        except:
+            # Throw exception?
+            print("IO error in text box")
+
+    def return_text(self):
+        if not self.active:
+            return self.text
 
 class simpleTextLable:
     def __init__(self, text):
