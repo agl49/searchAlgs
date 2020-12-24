@@ -97,7 +97,7 @@ class window:
                 pygame.draw.line(self.window, const.GREY, (j * gap, 0), 
                                  (j * gap, width))
 
-    def draw(self, grid, rows):
+    def draw_grid_window(self, grid, rows):
         #Fills window with white
         self.window.fill(const.WHITE)
 
@@ -109,6 +109,11 @@ class window:
         self.draw_grid(rows, self._width)
         pygame.display.update()
 
+    def draw_normal_window(self):
+        self.window.fill(const.WHITE)
+        pygame.display.update()
 
 
-
+# Display options menu function
+# def displayMenu():
+    

@@ -65,7 +65,7 @@ class simpleTextInput:
         # would be good
         pass
 
-    def _check_click(self):
+    def check_click(self):
         if self._rect.collidepoint(pygame.mouse.get_pos):
             self._active = True
         else: 
@@ -201,7 +201,7 @@ class Button:
     DEFAULT_COL = const.GREY
     DEFAULT_TEXT_COL = const.BLACK
 
-    def __init__(self, x, y, text, screen, type = const.buttonMode.BOOL, 
+    def __init__(self, x, y, text, type = const.buttonMode.BOOL, 
                  callback = None, args = None):
         self.x = x
         self.y = y
@@ -210,7 +210,7 @@ class Button:
         self.hover_col = Button.DEFAULT_COL
         self.click_col = Button.DEFAULT_COL
         self.text_col = Button.DEFAULT_TEXT_COL
-        self.screen = screen
+        self.screen = None
         self._font = pygame.font.SysFont("Constantia", 30)
         if type == const.buttonMode.CALLBACK:
             assert callable(callback), ("callback must be a function in " 
@@ -236,32 +236,32 @@ class Button:
     def __executeCallBack(self):
         return self.callback(*self.args)
 
-    def drawButton(self, events):
+    def drawButton(self, event, screen):
+        self.screen = screen
         update = False
 
         #Rectangle object of button
         button_rect = pygame.Rect(self.x, self.y, Button.WIDTH, Button.HEIGHT)
         
-        for event in events:  # type should be pygame.event.Event
             
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if button_rect.collidepoint(*event.pos):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if button_rect.collidepoint(*event.pos):
                     pygame.draw.rect(self.screen, self.click_col, button_rect)
 
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if button_rect.collidepoint(*event.pos):
-                    # TODO check to see if below is needed, but I feel like it is
-                    pygame.draw.rect(self.screen, self.button_col, button_rect)
-                    # execute callback function if set
-                    if self.type == const.buttonMode.CALLBACK:
-                        self.__executeCallBack()
-                    update = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if button_rect.collidepoint(*event.pos):
+                # TODO check to see if below is needed, but I feel like it is
+                pygame.draw.rect(self.screen, self.button_col, button_rect)
+                # execute callback function if set
+                if self.type == const.buttonMode.CALLBACK:
+                    self.__executeCallBack()
+                update = True
 
+        else:
+            if button_rect.collidepoint(pygame.mouse.get_pos()):
+                pygame.draw.rect(self.screen, self.hover_col, button_rect)
             else:
-                if button_rect.collidepoint(pygame.mouse.get_pos()):
-                    pygame.draw.rect(self.screen, self.hover_col, button_rect)
-                else:
-                    pygame.draw.rect(self.screen, self.button_col, button_rect)
+                pygame.draw.rect(self.screen, self.button_col, button_rect)
 
         # add shading to the buttons
         pygame.draw.line(self.screen, const.WHITE, (self.x, self.y), 
