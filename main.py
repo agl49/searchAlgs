@@ -12,7 +12,10 @@ def main():
     #add the other classes here
     
     # Test GUI elements
-    model.testGUI(mainClock)
+    # model.testGUI(mainClock)
+
+    # Test Window switching
+    model.main_menu_test(mainClock)
 
     pygame.quit()
 

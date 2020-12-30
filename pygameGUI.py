@@ -131,6 +131,10 @@ class simpleTextInput:
             self.modified = False
             return self.text
 
+# TODO Right now, this only works with a white background. You need to 
+# maybe modify it so that it will work with any color background. 
+# Otherwise it'll work for our project.
+# TODO Right now, the self._font_size is not used
 class simpleTextLable:
     def __init__(self, text):
         self._text = text
@@ -225,6 +229,7 @@ class Button:
         self.type = type
         self.callback = callback
         self.args = args
+        self._event_type = None
 
         # TODO do the tags in this project
 
@@ -240,7 +245,19 @@ class Button:
     def __executeCallBack(self):
         return self.callback(*self.args)
 
-    def drawButton(self, event, screen):
+    def get_event(self, event):
+        self._event = event
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self._event_type = pygame.MOUSEBUTTONDOWN
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self._event_type = pygame.MOUSEBUTTONUP
+
+        else:
+            self._event_type = None
+
+    def drawButton(self, screen):
         # Need to refactor this because the name sucks 
         self.screen = screen.window
         update = False
@@ -256,18 +273,20 @@ class Button:
         button_rect = pygame.Rect(self.x, self.y, width, Button.HEIGHT)
         
             
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if button_rect.collidepoint(*event.pos):
+        if self._event_type == pygame.MOUSEBUTTONDOWN:
+            if button_rect.collidepoint(*self._event.pos):
                     pygame.draw.rect(self.screen, self.click_col, button_rect)
+                    self._event_type = None
 
-        elif event.type == pygame.MOUSEBUTTONUP:
-            if button_rect.collidepoint(*event.pos):
+        elif self._event_type == pygame.MOUSEBUTTONUP:
+            if button_rect.collidepoint(*self._event.pos):
                  
                 pygame.draw.rect(self.screen, self.button_col, button_rect)
                 # execute callback function if set
                 if self.type == const.buttonMode.CALLBACK:
                     callbackReturn = self.__executeCallBack()
                 update = True
+                self._event_type = None
 
         else:
             if button_rect.collidepoint(pygame.mouse.get_pos()):

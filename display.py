@@ -66,8 +66,8 @@ class node:
 
 
 class window:
-    def __init__(self):
-        self._width = 800
+    def __init__(self, width = 900):
+        self._width = width
         self.window = pygame.display.set_mode((self._width, self._width))
         # Caption for the window
         pygame.display.set_caption("Search Alg demo")
@@ -111,7 +111,6 @@ class window:
 
     def draw_normal_window(self):
         self.window.fill(const.WHITE)
-        pygame.display.update()
 
 
 # Display options menu function

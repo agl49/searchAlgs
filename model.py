@@ -1,7 +1,8 @@
 # Here should be the game loops used for the game
 # maybe...
-import controller
+from controller import get_clicked_position
 from display import window
+from display import node
 import pygameGUI
 import const
 import pygame
@@ -98,8 +99,11 @@ def testGUI(mainClock):
                     if box.active:
                         box.add_text(event)
 
-            pressed1, buttonCallbackOut1 = testButton.drawButton(event, menuWindow)
-            pressed2, buttonCallbackout2 = testButton2.drawButton(event, menuWindow)
+            testButton.get_event(event)
+            testButton2.get_event(event)
+
+        pressed1, buttonCallbackOut1 = testButton.drawButton(menuWindow)
+        pressed2, buttonCallbackout2 = testButton2.drawButton(menuWindow)
 
         for box in textBoxes:
             box.draw(menuWindow.window)
@@ -125,4 +129,183 @@ def testGUI(mainClock):
 
         pygame.display.update()
         mainClock.tick(60)
+
+
+def main_menu_test(mainClock):
+    menuWindow = window()
+    menuWindow.draw_normal_window()
+
+    testTextLable = pygameGUI.simpleTextLable("Main menu")
+    testTextLable.set_font(pygame.font.SysFont("Ubuntu Mono", 30), 25, 
+                           const.BLACK, True)
+
+    toGameButton = pygameGUI.Button(400, 700, "to game", 
+                                  const.buttonMode.BOOL)
+
+    running = True
+    
+    while running:
+        toGame = False
+
+        # Events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.type == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            
+            toGameButton.get_event(event)
+
+        toGame = toGameButton.drawButton(menuWindow)[0]
+
+        testTextLable.draw(menuWindow.window, (400, 50))
+
+        if toGame:
+            print("Changing to demo")
+            menuWindow.draw_normal_window()
+            demo_test(mainClock)
+            print("finished demo")
+
+        pygame.display.update()
+        mainClock.tick(60)
+
+def demo_test(mainClock):
+    menuWindow = window()
+    menuWindow.draw_normal_window()
+
+    testTextLable = pygameGUI.simpleTextLable("Demo")
+    testTextLable.set_font(pygame.font.SysFont("Ubuntu Mono", 30), 25, 
+                           const.BLACK, True)
+
+    toMenuButton = pygameGUI.Button(400, 600, "to menu", 
+                                  const.buttonMode.BOOL)
+
+    running = True
+    
+    while running:
+        toMenu = False
+
+        # Events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.type == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+        
+            toMenuButton.get_event(event)
+
+        toMenu = toMenuButton.drawButton(menuWindow)[0]
+
+        testTextLable.draw(menuWindow.window, (400, 150))
+
+        if toMenu:
+            print("Changing to menu")
+            menuWindow.draw_normal_window()
+            running = False
+
+        pygame.display.update()
+        mainClock.tick(60)
+
+def menu(mainClock):
+    menu_window = window()
+    menu_window.draw_normal_window()
+
+    title = pygameGUI.simpleTextLable("Search algorithm demo")
+    title.set_font(pygame.font.SysFont("Times New Roman", 30), 1, const.BLACK, 
+                   True)
+    # Other menu UI elements here
+
+    toDemoButton = pygameGUI.Button(300, 800, "Start Demo", 
+                                    const.buttonMode.BOOL)
+
+    running = True
+
+    # Menu Loop
+    while running:
+        toDemo = False
+
+        # Events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.type == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+        
+            # Buttons get events section
+            toDemoButton.get_event(event)
+
+        # buttons section
+        toDemo = toDemoButton.drawButton(menu_window)[0]
+
+        # Text section
+        title.draw(menu_window.window, (400, 50))
+
+        # Window change
+        if toDemo:
+            menu_window.draw_normal_window()
+            # demo(mainClock)
+
+        pygame.display.update()
+        mainClock.tick(60)
+
+# TODO problem with space calculation of size of grid and space for 
+# buttons. Did some, checking, should work, not sure though
+# TODO Problem: current implementation does not allow for space 
+# for the buttons
+def demo(mainClock, rows, window_width):
+    demo_window = window(window_width)
+
+    start_node = None
+    end_node = None
+
+    rows = 50
+    grid = demo_window.make_grid(rows, window_width)    
+
+    running = True
+    alg_start = False
+
+    toMenuButton = pygameGUI.Button(200, 850, "Return to Menu", 
+                                    const.buttonMode.BOOL)
+    restartButton = pygameGUI.Button(600, 850, "Reset", const.buttonMode.BOOL)
+
+    running = True
+
+    # Algorithm demo loop
+    while running:
+        toMenu = False
+        restart = False
+
+        # Events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.type == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+
+            if alg_start:
+                continue
+
+            # Problem: what if click is outside of grid zone
+            if pygame.mouse.get_pressed()[0]: # Left mouse button
+                pos = pygame.mouse.get_pos()
+                row, col = get_clicked_position(pos, rows, window_width)
+                spot = grid[row][col]
+
+
 
