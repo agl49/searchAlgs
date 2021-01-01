@@ -255,30 +255,36 @@ def menu(mainClock):
         # Window change
         if toDemo:
             menu_window.draw_normal_window()
-            # demo(mainClock)
+            demo(mainClock, 50, 900)
 
         pygame.display.update()
         mainClock.tick(60)
 
 # TODO problem with space calculation of size of grid and space for 
 # buttons. Did some, checking, should work, not sure though
-# TODO Problem: current implementation does not allow for space 
-# for the buttons
 def demo(mainClock, rows, window_width):
     demo_window = window(window_width)
+
+    # Space of the window that the demo will take place
+    # demo_space = window_width - 100
 
     start_node = None
     end_node = None
 
-    rows = 50
-    grid = demo_window.make_grid(rows, window_width)    
+    rows = 40
+    cols = 45
+    grid, grid_container = demo_window.make_grid(rows, cols, window_width)    
 
     running = True
     alg_start = False
 
-    toMenuButton = pygameGUI.Button(200, 850, "Return to Menu", 
+    # Updates these positions
+    toMenuButton = pygameGUI.Button(820, 200, "Return to Menu", 
                                     const.buttonMode.BOOL)
-    restartButton = pygameGUI.Button(600, 850, "Reset", const.buttonMode.BOOL)
+    restartButton = pygameGUI.Button(820, 750, "Reset", const.buttonMode.BOOL)
+
+    # Text items to add to the window, such as instructions on how to use the 
+    # demo
 
     running = True
 
@@ -286,6 +292,8 @@ def demo(mainClock, rows, window_width):
     while running:
         toMenu = False
         restart = False
+
+        demo_window.draw_grid_window(grid, rows, cols, window_width, grid_container)
 
         # Events
         for event in pygame.event.get():
@@ -301,11 +309,50 @@ def demo(mainClock, rows, window_width):
             if alg_start:
                 continue
 
-            # Problem: what if click is outside of grid zone
             if pygame.mouse.get_pressed()[0]: # Left mouse button
                 pos = pygame.mouse.get_pos()
-                row, col = get_clicked_position(pos, rows, window_width)
-                spot = grid[row][col]
+
+                if grid_container.collidepoint(pos):
+                    row, col = get_clicked_position(pos, cols, window_width)
+                    # Debugging
+                    print(f"row: {row}, col: {col}")
+                    spot = grid[row][col]
+                    if not start_node:
+                        start_node = spot
+                        start_node.make_start()
+
+                    elif not end_node:
+                        end_node = spot
+                        end_node.make_end()
+
+                    elif spot != end_node and spot != start_node:
+                        spot.make_barrier()
+
+            elif pygame.mouse.get_pressed()[1]: # Right mouse button
+                pass
+
+            # Buttons get events
+            # toMenuButton.get_event(event)
+            # restartButton.get_event(event)
+
+        # Buttons section 
+        # toMenu = toMenuButton.drawButton(demo_window)[0]
+        # restart = restartButton.drawButton(demo_window)[0]
+
+        if toMenu:
+            print("toMenu pressed")
+            running = False
+
+        if restart:
+            print("restart pressed")
+
+
+        # Text section
+
+
+        pygame.display.update()
+        mainClock.tick(60)
+
 
 
 

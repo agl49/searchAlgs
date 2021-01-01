@@ -201,8 +201,6 @@ class simpleTextLable:
 
         surface.blit(self._surface, pos) 
 
-# TODO the buttons are a fixed size and can't adjust to text label 
-# from the input
 class Button:
     #button class variables
     WIDTH = 180
@@ -268,8 +266,6 @@ class Button:
 
         width = max(Button.WIDTH, text_len + 10)
 
-        #Rectangle object of button
-        # Fixed and won't adjust to the size of text
         button_rect = pygame.Rect(self.x, self.y, width, Button.HEIGHT)
         
             

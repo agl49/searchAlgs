@@ -39,6 +39,9 @@ class node:
     def reset(self):
         self.color = const.WHITE
 
+    def make_start(self):
+        self.color = const.ORANGE
+
     def make_closed(self):
         self.color = const.RED
 
@@ -74,45 +77,57 @@ class window:
 
     #Default values to prevent error with range()
     #Makes grid 2d array that used to present data 
-    def make_grid(self, rows = 1, width = 1):
+    def make_grid(self, rows = 1, cols = 1, width = 1):
         grid = []
-        gap = width // rows
-        #Fill the grid with nodes
-        for i in range(rows):
+        gap = width // cols
+        demo_height = rows * gap
+        demo_width = cols * gap
+        
+        # For now, grid is created from 0,0 for its starting point
+        grid_container = pygame.Rect(0, 0, demo_width, demo_height)
+        # Fill the grid with nodes
+        # debugging
+        # print(f"rows input:{rows}")
+
+        for y in range(rows):
             grid.append([])
-            for j in range(rows):
-                new_node = node(i, j, gap, rows)
-                grid[i].append(new_node)
+            for x in range(cols):
+                new_node = node(x, y, gap, rows)
+                grid[y].append(new_node)
 
-        return grid
+        return grid, grid_container
 
-    def draw_grid(self, rows, width):
-        gap = width // rows
+    def draw_grid(self, rows, cols, width):
+        gap = width // cols
+        demo_height = rows * gap
+
         for i in range(rows):
             #Draw the horizontal lines
             pygame.draw.line(self.window, const.GREY, (0, i * gap), 
                              (width, i * gap))
-            for j in range(rows):
+            for j in range(cols):
                 #Draw the vertical lines
                 pygame.draw.line(self.window, const.GREY, (j * gap, 0), 
-                                 (j * gap, width))
+                                 (j * gap, demo_height))
 
-    def draw_grid_window(self, grid, rows):
+    def draw_grid_window(self, grid, rows, cols, grid_width, grid_container):
         #Fills window with white
         self.window.fill(const.WHITE)
 
         #Draw each node object in the grid
-        for row in grid: 
-            for n in grid:
+        for row in grid:
+            # Debugging
+            # print(f"row length:{len(row)}")
+            for n in row:
                 n.draw(self.window)
 
-        self.draw_grid(rows, self._width)
+        self.draw_grid(rows, cols, grid_width)
+        pygame.draw.rect(self.window, const.BLACK, grid_container, 5)
+
+        # May have to remove this update
         pygame.display.update()
 
     def draw_normal_window(self):
         self.window.fill(const.WHITE)
 
 
-# Display options menu function
-# def displayMenu():
-    

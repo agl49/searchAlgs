@@ -15,7 +15,10 @@ def main():
     # model.testGUI(mainClock)
 
     # Test Window switching
-    model.main_menu_test(mainClock)
+    # model.main_menu_test(mainClock)
+
+    # Actual program
+    model.menu(mainClock)
 
     pygame.quit()
 
