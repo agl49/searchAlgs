@@ -5,7 +5,7 @@ import const
 
 #Defines each node in the demonstration
 class node:
-    def __init__(self, row, col, width, total_rows):
+    def __init__(self, row, col, width, total_rows, total_col):
         self.row = row
         self.col = col
         self.x = row * width
@@ -14,6 +14,7 @@ class node:
         self.neighbors = []
         self.width = width
         self.total_rows = total_rows
+        self.total_cols = total_col
 
     #returns row col position
     def get_pos(self):
@@ -61,7 +62,24 @@ class node:
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.width))
 
     def update_neighbors(self, grid):
-        pass
+        self.neighbors = []
+        # Down
+        if (self.row < self.total_rows - 1 and not 
+                grid[self.row + 1][self.col].is_barrier()):
+            self.neighbors.append(grid[self.row + 1][self.col])
+
+        # Up
+        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier():
+            self.neighbors.append(grid[self.row - 1][self.col])
+
+        # Right
+        if (self.col < self.total_cols - 1 and 
+                not grid[self.row][self.col + 1].is_barrier()):
+            self.neighbors.append(grid[self.row][self.col + 1])
+
+        # Left
+        if (self.col > 0 and not grid[self.row][self.col - 1].is_barrier()):
+            self.neighbors.append(grid[self.row][self.col - 1])
 
     #Defines less than < operation for object
     def __lt__(self, other):
@@ -92,7 +110,7 @@ class window:
         for y in range(rows):
             grid.append([])
             for x in range(cols):
-                new_node = node(x, y, gap, rows)
+                new_node = node(x, y, gap, rows, cols)
                 grid[y].append(new_node)
 
         return grid, grid_container
@@ -125,7 +143,7 @@ class window:
         pygame.draw.rect(self.window, const.BLACK, grid_container, 5)
 
         # May have to remove this update
-        pygame.display.update()
+        # pygame.display.update()
 
     def draw_normal_window(self):
         self.window.fill(const.WHITE)

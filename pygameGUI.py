@@ -271,8 +271,11 @@ class Button:
             
         if self._event_type == pygame.MOUSEBUTTONDOWN:
             if button_rect.collidepoint(*self._event.pos):
-                    pygame.draw.rect(self.screen, self.click_col, button_rect)
-                    self._event_type = None
+                pygame.draw.rect(self.screen, self.click_col, button_rect)
+                self._event_type = None
+            else:
+                pygame.draw.rect(self.screen, self.button_col, button_rect)
+                self._event_type = None
 
         elif self._event_type == pygame.MOUSEBUTTONUP:
             if button_rect.collidepoint(*self._event.pos):
@@ -282,6 +285,9 @@ class Button:
                 if self.type == const.buttonMode.CALLBACK:
                     callbackReturn = self.__executeCallBack()
                 update = True
+                self._event_type = None
+            else:
+                pygame.draw.rect(self.screen, self.button_col, button_rect)
                 self._event_type = None
 
         else:

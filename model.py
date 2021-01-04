@@ -260,8 +260,6 @@ def menu(mainClock):
         pygame.display.update()
         mainClock.tick(60)
 
-# TODO problem with space calculation of size of grid and space for 
-# buttons. Did some, checking, should work, not sure though
 def demo(mainClock, rows, window_width):
     demo_window = window(window_width)
 
@@ -279,9 +277,9 @@ def demo(mainClock, rows, window_width):
     alg_start = False
 
     # Updates these positions
-    toMenuButton = pygameGUI.Button(820, 200, "Return to Menu", 
+    toMenuButton = pygameGUI.Button(200, 820, "Return to Menu", 
                                     const.buttonMode.BOOL)
-    restartButton = pygameGUI.Button(820, 750, "Reset", const.buttonMode.BOOL)
+    restartButton = pygameGUI.Button(750, 820, "Reset", const.buttonMode.BOOL)
 
     # Text items to add to the window, such as instructions on how to use the 
     # demo
@@ -315,32 +313,42 @@ def demo(mainClock, rows, window_width):
                 if grid_container.collidepoint(pos):
                     row, col = get_clicked_position(pos, cols, window_width)
                     # Debugging
-                    print(f"row: {row}, col: {col}")
+                    # print(f"row: {row}, col: {col}")
+
                     spot = grid[row][col]
-                    if not start_node:
+                    if not start_node and spot != end_node:
                         start_node = spot
                         start_node.make_start()
 
-                    elif not end_node:
+                    elif not end_node and spot != start_node:
                         end_node = spot
                         end_node.make_end()
 
                     elif spot != end_node and spot != start_node:
                         spot.make_barrier()
 
-            elif pygame.mouse.get_pressed()[1]: # Right mouse button
-                pass
+            elif pygame.mouse.get_pressed()[2]: # Right mouse button
+                # This section allows for the erasure of selected nodes 
+                pos = pygame.mouse.get_pos()
+                row, col = get_clicked_position(pos, cols, window_width)
+                spot = grid[row][col]
+                spot.reset()
+                if spot == start_node:
+                    start_node = None
+                elif spot == end_node:
+                    end_node = None
 
             # Buttons get events
-            # toMenuButton.get_event(event)
-            # restartButton.get_event(event)
+            toMenuButton.get_event(event)
+            restartButton.get_event(event)
 
         # Buttons section 
-        # toMenu = toMenuButton.drawButton(demo_window)[0]
-        # restart = restartButton.drawButton(demo_window)[0]
+        toMenu = toMenuButton.drawButton(demo_window)[0]
+        restart = restartButton.drawButton(demo_window)[0]
 
         if toMenu:
             print("toMenu pressed")
+            demo_window.draw_normal_window()
             running = False
 
         if restart:
