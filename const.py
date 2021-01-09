@@ -2,7 +2,6 @@
 # use in a bunch of files
 from enum import Enum
 
-# TODO some of these colors are wrong. Fix them
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
@@ -17,3 +16,20 @@ TURQUOISE = (64, 224, 208)
 class buttonMode(Enum):
      BOOL = 1
      CALLBACK = 2
+
+ASTAR = "1"
+DIJKSTRA = "2"
+BFS = "3"
+DFS = "4"
+
+ALG_SET = {ASTAR, DIJKSTRA, BFS, 
+            DFS}
+
+NO_H = "1"
+MAN_DIS = "2"
+EUCLID = "3"
+DIAGONAL = "4"
+LONG_MAN_DIS = "5"
+
+H_SET = {NO_H, MAN_DIS, EUCLID, DIAGONAL, 
+         LONG_MAN_DIS}

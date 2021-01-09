@@ -1,39 +1,54 @@
 from math import sqrt
+import const
 
-class hfunction():
-    def __init__(self, which_h):
-        self.h = which_h
+# Weak implementation, could be better
+def h_factory(name):
+    if name == const.NO_H:
+        return no_H
 
-    def execute(self, node, dest):
-        ans = self.h(node, dest)
-        return ans
+    elif name == const.MAN_DIS:
+        return manhattan
+
+    elif name == const.EUCLID:
+        return euclidean
+
+    elif name == const.DIAGONAL:
+        return diagonal
+
+    elif name == const.LONG_MAN_DIS:
+        return longest_manhattan
+
+    else:
+        print("Error: incorrect h_name")
+        return None
 
 # h(n) = 0 results in dijkstra's 
-def no_H():
+def no_H(n, dest):
     return 0
 
 # Manhattan distance
-def manhattan(node, dest):
-    dx = abs(node.x - dest.x)
-    dy = abs(node.y - dest.y)
+def manhattan(n, dest):
+    dx = abs(n.x - dest.x)
+    dy = abs(n.y - dest.y)
     return dx + dy
 
 # Euclidean distance
-def euclidean(node, dest):
-    dx = (node.x - dest.x) * 2
-    dy = (node.y - dest.y) * 2
-    return sqrt(dx + dy)
+def euclidean(n, dest):
+    dx = abs(n.x - dest.x)
+    dy = abs(n.y - dest.y)
+    return 1 * sqrt(dx * dx + dy * dy)
 
 # Diagonal distance
-def diagonal(node, dest):
+def diagonal(n, dest):
     # Chebyshev distance
-    dx = abs(node.x - dest.x)
-    dy = abs(node.y - dest.y)
+    dx = abs(n.x - dest.x)
+    dy = abs(n.y - dest.y)
     return 1 * (dx + dy) + (1 - 2) * min(dx, dy)
 
 # Longest Manhattan Distance
-def longest_manhattan(node, dest):
-    dx = (node.x - dest.x) 
-    dy = (node.y - dest.y)
+# really bad h. Keep?
+def longest_manhattan(n, dest):
+    dx = (n.x - dest.x)
+    dy = (n.y - dest.y)
     return max(dx, dy)
 

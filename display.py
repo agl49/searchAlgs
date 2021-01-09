@@ -2,14 +2,15 @@
 # As a result, this will hold the functions for the pygame game loops
 import pygame
 import const
+from collections import namedtuple
 
 #Defines each node in the demonstration
 class node:
     def __init__(self, row, col, width, total_rows, total_col):
         self.row = row
         self.col = col
-        self.x = row * width
-        self.y = col * width
+        self.x = col * width
+        self.y = row * width
         self.color = const.WHITE
         self.neighbors = []
         self.width = width
@@ -18,7 +19,9 @@ class node:
 
     #returns row col position
     def get_pos(self):
-        return self.row, self.col
+        my_position = namedtuple("my_position", ["x", "y"])
+        p = my_position(self.col, self.row)
+        return p
 
     #Determines if node a node has been visited
     def is_visited(self):
@@ -63,24 +66,32 @@ class node:
 
     def update_neighbors(self, grid):
         self.neighbors = []
-        # Down
-        if (self.row < self.total_rows - 1 and not 
-                grid[self.row + 1][self.col].is_barrier()):
-            self.neighbors.append(grid[self.row + 1][self.col])
+        
+        try:
+            # Down
+            if (self.row < self.total_rows - 1 and not 
+                        grid[self.row + 1][self.col].is_barrier()):
+                self.neighbors.append(grid[self.row + 1][self.col])
 
-        # Up
-        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier():
-            self.neighbors.append(grid[self.row - 1][self.col])
+            # Up
+            if self.row > 0 and not grid[self.row - 1][self.col].is_barrier():
+                self.neighbors.append(grid[self.row - 1][self.col])
 
-        # Right
-        if (self.col < self.total_cols - 1 and 
-                not grid[self.row][self.col + 1].is_barrier()):
-            self.neighbors.append(grid[self.row][self.col + 1])
+            # Right
+            if (self.col < self.total_cols - 1 and 
+                    not grid[self.row][self.col + 1].is_barrier()):
+                self.neighbors.append(grid[self.row][self.col + 1])
 
-        # Left
-        if (self.col > 0 and not grid[self.row][self.col - 1].is_barrier()):
-            self.neighbors.append(grid[self.row][self.col - 1])
+            # Left
+            if (self.col > 0 and not grid[self.row][self.col - 1].is_barrier()):
+                self.neighbors.append(grid[self.row][self.col - 1])
 
+        except Exception as e:
+            print(e)
+            print(f"self.row and col: {self.row} {self.col}")
+            raise
+
+        
     #Defines less than < operation for object
     def __lt__(self, other):
         return False
@@ -110,7 +121,10 @@ class window:
         for y in range(rows):
             grid.append([])
             for x in range(cols):
-                new_node = node(x, y, gap, rows, cols)
+                # debugging
+                # print(f"node is : {type(node)}")
+
+                new_node = node(y, x, gap, rows, cols)
                 grid[y].append(new_node)
 
         return grid, grid_container
@@ -144,6 +158,23 @@ class window:
 
         # May have to remove this update
         # pygame.display.update()
+
+    def alg_draw_grid(self, grid, rows, cols, grid_width, grid_container):
+        #Fills window with white
+        self.window.fill(const.WHITE)
+
+        #Draw each node object in the grid
+        for row in grid:
+            # Debugging
+            # print(f"row length:{len(row)}")
+            for n in row:
+                n.draw(self.window)
+
+        self.draw_grid(rows, cols, grid_width)
+        pygame.draw.rect(self.window, const.BLACK, grid_container, 5)
+
+        # May have to remove this update
+        pygame.display.update()
 
     def draw_normal_window(self):
         self.window.fill(const.WHITE)

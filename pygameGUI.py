@@ -129,7 +129,7 @@ class simpleTextInput:
     def return_text(self):
         if not self.active:
             self.modified = False
-            return self.text
+            return self.text.strip()
 
 # TODO Right now, this only works with a white background. You need to 
 # maybe modify it so that it will work with any color background. 
