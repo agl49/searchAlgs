@@ -18,12 +18,11 @@ class buttonMode(Enum):
      CALLBACK = 2
 
 ASTAR = "1"
-DIJKSTRA = "2"
-BFS = "3"
-DFS = "4"
+DFS = "2"
+# BFS = "3"
+# DFS = "4"
 
-ALG_SET = {ASTAR, DIJKSTRA, BFS, 
-            DFS}
+ALG_SET = {ASTAR, DFS}
 
 NO_H = "1"
 MAN_DIS = "2"

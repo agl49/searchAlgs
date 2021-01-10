@@ -236,15 +236,19 @@ def menu(mainClock):
     valid_input_1.set_font(pygame.font.SysFont("Times New Roman", 30), 1, 
                            const.RED, True)
 
-    alg_options = pygameGUI.simpleTextLable("1-aStar 2-dijkstra 3-Bfs 4-Dfs")
+    alg_options = pygameGUI.simpleTextLable("1-aStar/dijkstra/Bfs 2-Dfs")
     alg_options.set_font(pygame.font.SysFont("Times New Roman", 28), 1, 
                          const.BLACK, True)
 
-    alg_instructions_2 = pygameGUI.simpleTextLable("If A* is selected, please "
-                                                   "the h() you would like. 1"
-                                                   " otherwise.")
+    alg_instructions_2 = pygameGUI.simpleTextLable("1 serves as A* if a h is "
+                                                   "selected. Otherwise it's"
+                                                   " BFS or Dijkstra's")
     alg_instructions_2.set_font(pygame.font.SysFont("Times New Roman", 30), 1, 
                                 const.BLACK, True)
+
+    alg_instructions_3 = pygameGUI.simpleTextLable("with a travel cost of 1.")
+    alg_instructions_3.set_font(pygame.font.SysFont("Times New Roman", 30), 1,
+                               const.BLACK, True)
 
     valid_input_2 = pygameGUI.simpleTextLable("Invalid")
     valid_input_2.set_font(pygame.font.SysFont("Times New Roman", 30), 1, 
@@ -287,10 +291,10 @@ def menu(mainClock):
               "boarder": 5}
 
     kwargs2 = {"x": 100, 
-              "y": 350,
+              "y": 400,
               "width": 50,
               "height": 50,
-              "pos": pygame.math.Vector2(100, 350), 
+              "pos": pygame.math.Vector2(100, 400), 
               "size": pygame.math.Vector2(50, 50),
               "bg_color": const.GREY,
               "active_color": const.RED,
@@ -355,9 +359,10 @@ def menu(mainClock):
         valid_input_1.draw(menu_window.window, (170, 155))
         alg_options.draw(menu_window.window, (100, 230))
         alg_instructions_2.draw(menu_window.window, (100, 300))
-        valid_input_2.draw(menu_window.window, (170, 355))
-        h_options_1.draw(menu_window.window, (100, 430))
-        h_options_2.draw(menu_window.window, (100, 460))
+        alg_instructions_3.draw(menu_window.window, (100, 350))
+        valid_input_2.draw(menu_window.window, (170, 405))
+        h_options_1.draw(menu_window.window, (100, 480))
+        h_options_2.draw(menu_window.window, (100, 510))
         controls_1.draw(menu_window.window, (100, 600))
         controls_2.draw(menu_window.window, (100, 650))
         demo_status.draw(menu_window.window, (500, 800))
