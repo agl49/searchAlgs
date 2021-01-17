@@ -94,8 +94,10 @@ def aStar(*args):
 
     return False
 
+# weighted A* search
+
 # Example for non-A*
-def dijkstra(*args):
+def uniform_cost_search(*args):
     draw = args[0]
     grid = args[1]
     start = args[2]
@@ -104,6 +106,8 @@ def dijkstra(*args):
     cols = args[5]
 
     pass
+
+# Greedy best first search
 
 # Depth first search
 def depth_first_search(*args):
@@ -144,7 +148,7 @@ def depth_first_search(*args):
             current = stack.get()[1]
             current.make_closed()
         except Exception as e:
-            # print(e)
+            print(e)
             # print(f"from get: {stack.get()}")
             # print(f"stack size: {stack.qsize()}")
             # print(f"after 2 get stack: {list(stack.queue)}")
