@@ -23,8 +23,6 @@ def diffTestFunction(a, b, c):
     return ans
 
 def testGUI(mainClock):
-    # TODO this needs fixing, the order in which
-    # things happen
     # simple text input dictionary
     kwargs = {"x": 400, 
               "y": 200,
